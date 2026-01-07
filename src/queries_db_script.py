@@ -2,7 +2,7 @@ import mysql.connector
 import os
 import sys
 
-db_name = 'movie_db_assign3'
+db_name = 'matant2'
 
 def get_db_connection():
     # Similar connection logic as other scripts

@@ -7,10 +7,10 @@ from datetime import datetime
 
 # Configuration
 API_KEY_FILE = 'api_key.txt'
-DEFAULT_DB_USER = 'root'
-DEFAULT_DB_PASS = 'password'
-DEFAULT_DB_HOST = 'mysqlsrv1.cs.tau.ac.il'
-DB_NAME = 'movie_db_assign3'
+DEFAULT_DB_USER = 'matant2'
+DEFAULT_DB_PASS = 'matant2'
+DEFAULT_DB_HOST = '127.0.0.1'
+DB_NAME = 'matant2'
 MIN_RECORDS = 5000 # Minimum target
 
 def get_api_key():

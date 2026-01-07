@@ -8,7 +8,7 @@ def get_db_connection():
     # Similar connection logic as other scripts
     user = os.getenv('DB_USER', 'root')
     password = os.getenv('DB_PASSWORD', 'password')
-    host = os.getenv('DB_HOST', 'mysqlsrv1.cs.tau.ac.il')
+    host = os.getenv('DB_HOST', '127.0.0.1')
     
     creds_file = 'mysql_and_user_password.txt'
     if os.path.exists(creds_file):

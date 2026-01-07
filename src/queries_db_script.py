@@ -21,7 +21,8 @@ def get_db_connection():
         except:
             pass
 
-    return mysql.connector.connect(host=host, user=user, password=password, database=db_name)
+    port = int(os.getenv('DB_PORT', 3305))
+    return mysql.connector.connect(host=host, port=port, user=user, password=password, database=db_name)
 
 def query_1(keyword):
     """

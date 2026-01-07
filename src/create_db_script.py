@@ -4,9 +4,9 @@ import sys
 
 def get_db_connection():
     # Attempt to read credentials from file, otherwise use defaults/env vars
-    user = 'royzemah'
-    password = '12345'
-    host = 'mysqlsrv1.cs.tau.ac.il' # As per instructions, but usually this is for deployment. 
+    user = 'matant2'
+    password = 'matant2'
+    host = '127.0.0.1' # As per instructions, but usually this is for deployment. 
                                      # For local dev, maybe localhost. 
                                      # I will stick to a sensible default or env var.
     
@@ -27,9 +27,13 @@ def get_db_connection():
     password = os.getenv('DB_PASSWORD', password)
     host = os.getenv('DB_HOST', host) # Use existing host (from assignment) if env var not set
 
+    host = os.getenv('DB_HOST', '127.0.0.1')
+    port = int(os.getenv('DB_PORT', 3305))
+
     try:
         conn = mysql.connector.connect(
             host=host,
+            port=port,
             user=user,
             password=password
         )
@@ -42,12 +46,12 @@ def create_database():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    db_name = 'movie_db_assign3'
+    db_name = 'matant2'
 
     try:
         # Create Database
-        cursor.execute(f"DROP DATABASE IF EXISTS {db_name}")
-        cursor.execute(f"CREATE DATABASE {db_name} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+        #cursor.execute(f"DROP DATABASE IF EXISTS {db_name}")
+       # cursor.execute(f"CREATE DATABASE {db_name} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
         print(f"Database {db_name} created.")
 
         cursor.execute(f"USE {db_name}")

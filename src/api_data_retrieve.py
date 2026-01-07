@@ -44,9 +44,12 @@ def get_db_connection():
         except Exception as e:
             print(f"Warning: Could not read {creds_file}: {e}")
 
+    port = int(os.getenv('DB_PORT', 3305))
+
     try:
         conn = mysql.connector.connect(
             host=host,
+            port=port,
             user=user,
             password=password,
             database=DB_NAME

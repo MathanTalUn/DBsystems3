@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+env/
+venv/
+.DS_Store
+mysql_and_user_password.txt
+api_key.txt

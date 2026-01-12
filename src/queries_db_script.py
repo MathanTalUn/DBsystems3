@@ -58,7 +58,8 @@ def query_1(keyword):
 def query_2(keyword):
     """
     Full-text search on Actors.name.
-    Returns top 3 actor matches by best match of `keyword` to the actor name, along with their movie count in our DB.
+    Returns the top 3 actors whose names best match `keyword`, along with the number of distinct movies
+    they appear in our DB. Results are ordered by relevance (DESC), with ties broken by movies_in_db (DESC).
     """
     conn = get_db_connection()
     cursor = conn.cursor()

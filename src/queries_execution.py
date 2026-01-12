@@ -5,8 +5,8 @@ def main():
     print("--- Executing Queries for Movie Database ---")
 
     # Query 1: Full text search on Movies.title (top 10)
-    keyword_1 = "Man"
-    print(f"\n[Query 1] Full-text search in Movies.title for '{keyword_1}' (top 10)")
+    keyword_1 = "Star Wars"
+    print(f"\n[Query 1] Full-text search in Movies.title for '{keyword_1}' (top 10 results)")
     try:
         queries_db_script.query_1(keyword_1)
     except Exception as e:
@@ -14,7 +14,7 @@ def main():
 
     # Query 2: Full text search on Actors.name (top 3 + movie count)
     keyword_2 = "Tom"
-    print(f"\n[Query 2] Full-text search in Actors.name for '{keyword_2}' (top 3 + movies_in_db)")
+    print(f"\n[Query 2] Full-text search in Actors.name for '{keyword_2}' (top 3 results + movies_in_db)")
     try:
         queries_db_script.query_2(keyword_2)
     except Exception as e:

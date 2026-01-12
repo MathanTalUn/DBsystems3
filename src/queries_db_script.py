@@ -2,12 +2,12 @@ import mysql.connector
 import os
 import sys
 
-db_name = 'matant2'
+db_name = 'royzemah'
 
 def get_db_connection():
     # Similar connection logic as other scripts
-    user = os.getenv('DB_USER', 'root')
-    password = os.getenv('DB_PASSWORD', 'password')
+    user = os.getenv('DB_USER', 'royzemah')
+    password = os.getenv('DB_PASSWORD', 'royzemah')
     host = os.getenv('DB_HOST', '127.0.0.1')
     
     creds_file = 'mysql_and_user_password.txt'
@@ -26,61 +26,68 @@ def get_db_connection():
 
 def query_1(keyword):
     """
-    Full-text search on Movie overview.
-    Returns title and overview.
+    Full-text search on Movies.title.
+    Returns top 10 (title, release_date) rows, ordered by best match of `keyword` to the movie title.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     query = """
-    SELECT title, overview 
-    FROM Movies 
-    WHERE MATCH(overview) AGAINST (%s IN NATURAL LANGUAGE MODE)
+    SELECT
+        M.title,
+        M.release_date
+    FROM Movies M
+    WHERE MATCH(M.title) AGAINST (%s IN NATURAL LANGUAGE MODE)
+    ORDER BY MATCH(M.title) AGAINST (%s IN NATURAL LANGUAGE MODE) DESC
     LIMIT 10;
     """
-    
-    cursor.execute(query, (keyword,))
+
+    cursor.execute(query, (keyword, keyword))
     results = cursor.fetchall()
-    
+
     if not results:
-        print(f"No movies found with overview matching '{keyword}'")
+        print(f"No movies found with title matching '{keyword}'")
     else:
-        print(f"-- Movies with '{keyword}' in overview --")
-        for r in results:
-            print(f"Title: {r[0]}")
-            print(f"Overview: {r[1][:100]}...") # truncate for display
-            print("-" * 20)
-            
+        print(f"-- Top matches for '{keyword}' in movie titles --")
+        for title, release_date in results:
+            print(f"Title: {title} | Released: {release_date}")
+
     cursor.close()
     conn.close()
 
 def query_2(keyword):
     """
-    Full-text search on Movie title.
-    Returns title, release_date.
+    Full-text search on Actors.name.
+    Returns top 3 actor matches by best match of `keyword` to the actor name, along with their movie count in our DB.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
-    
+
     query = """
-    SELECT title, release_date
-    FROM Movies 
-    WHERE MATCH(title) AGAINST (%s IN NATURAL LANGUAGE MODE)
-    LIMIT 10;
+    SELECT
+        A.name,
+        COUNT(DISTINCT MA.movie_id) AS movies_in_db
+    FROM Actors A
+    JOIN Movie_Actors MA ON A.actor_id = MA.actor_id
+    WHERE MATCH(A.name) AGAINST (%s IN NATURAL LANGUAGE MODE)
+    GROUP BY A.actor_id, A.name
+    ORDER BY MATCH(A.name) AGAINST (%s IN NATURAL LANGUAGE MODE) DESC, movies_in_db DESC
+    LIMIT 3;
     """
-    
-    cursor.execute(query, (keyword,))
+
+    cursor.execute(query, (keyword, keyword))
     results = cursor.fetchall()
-    
+
     if not results:
-        print(f"No movies found with title matching '{keyword}'")
+        print(f"No actors found matching '{keyword}'")
     else:
-        print(f"-- Movies with '{keyword}' in title --")
-        for r in results:
-            print(f"Title: {r[0]}, Released: {r[1]}")
-            
+        print(f"-- Top matches for '{keyword}' in actor names --")
+        for name, movies_in_db in results:
+            print(f"Actor: {name} | Movies in DB: {movies_in_db}")
+
     cursor.close()
     conn.close()
+
 
 def query_3(min_vote_count):
     """

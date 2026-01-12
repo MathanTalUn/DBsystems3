@@ -4,21 +4,22 @@ import sys
 def main():
     print("--- Executing Queries for Movie Database ---")
 
-    # Query 1: Full text search on Overview
-    keyword_1 = "adventure"
-    print(f"\n[Query 1] Full-text search in Overview for '{keyword_1}'")
+    # Query 1: Full text search on Movies.title (top 10)
+    keyword_1 = "Man"
+    print(f"\n[Query 1] Full-text search in Movies.title for '{keyword_1}' (top 10)")
     try:
         queries_db_script.query_1(keyword_1)
     except Exception as e:
         print(f"Error executing Query 1: {e}")
 
-    # Query 2: Full text search on Title
-    keyword_2 = "love"
-    print(f"\n[Query 2] Full-text search in Title for '{keyword_2}'")
+    # Query 2: Full text search on Actors.name (top 3 + movie count)
+    keyword_2 = "Tom"
+    print(f"\n[Query 2] Full-text search in Actors.name for '{keyword_2}' (top 3 + movies_in_db)")
     try:
         queries_db_script.query_2(keyword_2)
     except Exception as e:
         print(f"Error executing Query 2: {e}")
+
 
     # Query 3: Genres with total votes > X
     min_votes = 50000

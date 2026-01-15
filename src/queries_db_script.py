@@ -2,12 +2,12 @@ import mysql.connector
 import os
 import sys
 
-db_name = 'royzemah'
+db_name = 'matant2'
 
 def get_db_connection():
     # Similar connection logic as other scripts
-    user = os.getenv('DB_USER', 'royzemah')
-    password = os.getenv('DB_PASSWORD', 'royzemah')
+    user = os.getenv('DB_USER', 'matant2')
+    password = os.getenv('DB_PASSWORD', 'matant2')
     host = os.getenv('DB_HOST', '127.0.0.1')
     
     creds_file = 'mysql_and_user_password.txt'
@@ -90,31 +90,34 @@ def query_2(keyword):
     conn.close()
 
 
-def query_3(min_vote_count):
+def query_3(min_movies_count):
     """
-    Complex Query 1: Aggregation and Group By.
-    Find Genres that have more than 'min_vote_count' total votes across all their movies,
-    ordered by total votes descending.
+    Complex Query 1: Aggregation, Group By, and Join.
+    Find "High Quality" Genres. 
+    Selects genres that have at least 'min_movies_count' movies in the DB,
+    ordered by the *average* rating (vote_average) of their movies.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
     
     query = """
-    SELECT G.name, SUM(M.vote_count) as total_votes
+    SELECT G.name, AVG(M.vote_average) as avg_rating, COUNT(M.movie_id) as movie_count
     FROM Genres G
     JOIN Movie_Genres MG ON G.genre_id = MG.genre_id
     JOIN Movies M ON MG.movie_id = M.movie_id
     GROUP BY G.name
-    HAVING total_votes > %s
-    ORDER BY total_votes DESC;
+    HAVING movie_count >= %s
+    ORDER BY avg_rating DESC
+    LIMIT 5;
     """
     
-    cursor.execute(query, (min_vote_count,))
+    cursor.execute(query, (min_movies_count,))
     results = cursor.fetchall()
     
-    print(f"-- Genres with total votes > {min_vote_count} --")
+    print(f"-- Top Rated Genres (min {min_movies_count} movies) --")
     for r in results:
-        print(f"Genre: {r[0]}, Total Votes: {r[1]}")
+        # r[0]=Name, r[1]=AvgRating, r[2]=Count
+        print(f"Genre: {r[0]} | Avg Rating: {r[1]:.2f} | Movies in DB: {r[2]}")
     
     cursor.close()
     conn.close()
@@ -155,31 +158,34 @@ def query_4(actor_name):
     cursor.close()
     conn.close()
 
-def query_5():
+def query_5(min_genres):
     """
-    Complex Query 3: Join 3 tables to find Top 5 Actors by number of movies they appeared in,
-    but only consider movies with popularity > 10.
+    Complex Query 3: Join 4 tables.
+    Find "Versatile Actors".
+    Selects actors who have appeared in movies belonging to at least 'min_genres' distinct genres.
+    Ordered by the number of unique genres they have played in.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
     
     query = """
-    SELECT A.name, COUNT(MA.movie_id) as movie_count
+    SELECT A.name, COUNT(DISTINCT MG.genre_id) as distinct_genres
     FROM Actors A
     JOIN Movie_Actors MA ON A.actor_id = MA.actor_id
     JOIN Movies M ON MA.movie_id = M.movie_id
-    WHERE M.popularity > 10
+    JOIN Movie_Genres MG ON M.movie_id = MG.movie_id
     GROUP BY A.actor_id, A.name
-    ORDER BY movie_count DESC
+    HAVING distinct_genres >= %s
+    ORDER BY distinct_genres DESC
     LIMIT 5;
     """
     
-    cursor.execute(query)
+    cursor.execute(query, (min_genres,))
     results = cursor.fetchall()
     
-    print("-- Top 5 Actors in popular movies (>10 popularity) --")
+    print(f"-- Versatile Actors (appearing in >= {min_genres} distinct genres) --")
     for r in results:
-        print(f"{r[0]} ({r[1]} movies)")
+        print(f"{r[0]} (Genres: {r[1]})")
         
     cursor.close()
     conn.close()

@@ -4,8 +4,8 @@ import sys
 
 def get_db_connection():
     # Attempt to read credentials from file, otherwise use defaults/env vars
-    user = 'royzemah'
-    password = 'royzemah'
+    user = 'matant2'
+    password = 'matant2'
     host = '127.0.0.1' # As per instructions, but usually this is for deployment. 
                                      # For local dev, maybe localhost. 
                                      # I will stick to a sensible default or env var.
@@ -46,7 +46,7 @@ def create_database():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    db_name = 'royzemah'
+    db_name = 'matant2'
 
     try:
         # Create Database
@@ -70,7 +70,8 @@ def create_database():
                 original_language VARCHAR(10),
                 FULLTEXT (title),
                 INDEX (release_date),
-                INDEX (vote_average)
+                INDEX (vote_average),
+                INDEX (popularity)
             )
         """)
         print("Table 'Movies' created.")

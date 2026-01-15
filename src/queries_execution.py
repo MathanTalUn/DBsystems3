@@ -21,11 +21,11 @@ def main():
         print(f"Error executing Query 2: {e}")
 
 
-    # Query 3: Genres with total votes > X
-    min_votes = 50000
-    print(f"\n[Query 3] Genres with > {min_votes} votes")
+    # Query 3: Top Rated Genres (min movies > X)
+    min_movies = 100
+    print(f"\n[Query 3] Top Rated Genres (min {min_movies} movies)")
     try:
-        queries_db_script.query_3(min_votes)
+        queries_db_script.query_3(min_movies)
     except Exception as e:
         print(f"Error executing Query 3: {e}")
 
@@ -37,10 +37,11 @@ def main():
     except Exception as e:
         print(f"Error executing Query 4: {e}")
 
-    # Query 5: Top 5 Actors in popular movies
-    print("\n[Query 5] Top 5 Actors in popular movies (>10 popularity)")
+    # Query 5: Versatile Actors
+    min_genres = 3
+    print(f"\n[Query 5] Versatile Actors (appearing in >= {min_genres} distinct genres)")
     try:
-        queries_db_script.query_5()
+        queries_db_script.query_5(min_genres)
     except Exception as e:
         print(f"Error executing Query 5: {e}")
 

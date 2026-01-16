@@ -11,7 +11,7 @@ DEFAULT_DB_USER = 'matant2'
 DEFAULT_DB_PASS = 'matant2'
 DEFAULT_DB_HOST = '127.0.0.1'
 DB_NAME = 'matant2'
-MIN_RECORDS = 5000 # Minimum target
+MIN_RECORDS = 100 # Minimum target
 
 def get_api_key():
     api_key = os.getenv('TMDB_API_KEY')
@@ -180,10 +180,11 @@ def fetch_and_populate():
                         
                         try:
                             cursor.execute("""
-                                INSERT IGNORE INTO Movie_Actors (movie_id, actor_id, character_name, cast_order)
-                                VALUES (%s, %s, %s, %s)
-                            """, (movie_id, actor_id, actor.get('character', ''), actor.get('order', 0)))
+                                INSERT IGNORE INTO Movie_Actors (movie_id, actor_id, character_name)
+                                VALUES (%s, %s, %s)
+                            """, (movie_id, actor_id, actor.get('character', '')))
                         except:
+                            print("Failed to insert Movie_Actors")
                             pass
 
                     crew = c_data.get('crew', [])

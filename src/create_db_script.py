@@ -125,7 +125,6 @@ def create_database():
                 movie_id INT NOT NULL,
                 actor_id INT NOT NULL,
                 character_name VARCHAR(255),
-                cast_order INT,
                 PRIMARY KEY (movie_id, actor_id),
                 FOREIGN KEY (movie_id) REFERENCES Movies(movie_id) ON DELETE CASCADE,
                 FOREIGN KEY (actor_id) REFERENCES Actors(actor_id) ON DELETE CASCADE
